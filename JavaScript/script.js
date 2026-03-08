@@ -88,3 +88,116 @@ async function updateMarket(){
 initTable();
 updateMarket();
 setInterval(updateMarket,15000); // تحديث كل 15 ثانية
+
+
+
+// =================================
+
+// JavaScript: ظهور العناصر بتأثير fade + slide
+document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('section');
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add('show');
+
+                // العناصر داخل القسم مع fade-slide تظهر بتأخير متتابع
+                const elements = entry.target.querySelectorAll('.fade-slide');
+                elements.forEach((el, index) => {
+                    el.style.transitionDelay = `${index * 0.2}s`;
+                    el.classList.add('show');
+                });
+
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+});
+
+// =================================
+
+
+// =================================
+
+// Progress Bar مع تغير الألوان حسب المنطقة
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = (scrollTop / docHeight) * 100;
+
+    const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = scrollPercent + "%";
+
+    // تغير اللون عند مناطق محددة
+    if (scrollPercent < 25) {
+        progressBar.style.background = "linear-gradient(to right, #1e90ff, #00ffcc)";
+    } else if (scrollPercent < 50) {
+        progressBar.style.background = "linear-gradient(to right, #ff7f50, #ff1493)";
+    } else if (scrollPercent < 75) {
+        progressBar.style.background = "linear-gradient(to right, #32cd32, #7fff00)";
+    } else {
+        progressBar.style.background = "linear-gradient(to right, #ff4500, #ffd700)";
+    }
+});
+
+// =================================
+
+// ================================
+
+// زر العودة للأعلى
+const scrollTopBtn = document.getElementById('scroll-top');
+
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 200) {
+        scrollTopBtn.style.display = 'block';
+    } else {
+        scrollTopBtn.style.display = 'none';
+    }
+});
+
+// دالة ease-in للقفز التدريجي
+function easeInQuad(t) {
+    return t * t; // t من 0 إلى 1
+}
+
+// دالة التمرير للأعلى مع التأخير والسرعة التدريجية
+function scrollToTopWithDelay(duration, delay) {
+    const start = window.scrollY;
+    const startTime = performance.now();
+
+    function startScroll() {
+        function scrollStep(currentTime) {
+            const elapsed = currentTime - startTime;
+            let t = Math.min(elapsed / duration, 1);
+            t = easeInQuad(t); // تطبيق التسارع
+            window.scrollTo(0, start * (1 - t));
+            if (t < 1) {
+                requestAnimationFrame(scrollStep);
+            }
+        }
+        requestAnimationFrame(scrollStep);
+    }
+
+    // الانتظار قبل بدء الحركة
+    setTimeout(startScroll, delay);
+}
+
+// عند الضغط على الزر
+scrollTopBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    scrollToTopWithDelay(1000, 600); // duration=1000ms (1s)، delay=600ms
+});
+
+// ================================
+

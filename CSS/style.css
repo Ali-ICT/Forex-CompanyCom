@@ -4,7 +4,12 @@ body { font-family: sans-serif; }
 ul { list-style: none; }
 a { text-decoration: none; color: inherit; }
 .container { width: 600px; margin: auto; padding: 0 15px; }
-
+html {
+    scroll-behavior: smooth;
+}
+button {
+    cursor: pointer;
+}
 /* Header */
 header {
     position: relative;
@@ -139,8 +144,28 @@ nav ul a:hover { color: blue; }
 
 
 body {margin:0; font-family: Arial, sans-serif; background:#0f172a; color:#fff;}
-.market-section {padding:40px 20px;}
-.market-title {font-size:28px; text-align:center; margin-bottom:20px;}
+.market-section {padding:40px 20px;
+    text-transform: capitalize;
+}
+.market-title {font-size:28px; text-align:center; margin-bottom:20px;
+        animation: alternate 1.7s linear infinite alternate;
+    }
+    @keyframes alternate {
+            0% {
+                color: #334155;
+            }
+            25% {
+                color: #50631b;
+            }
+            50% {
+                color: #42194d;
+            }
+            75% {
+                color: #5e3e0f;
+            }
+            100% {
+                color: #9bb46d;
+            }}
 .market-table-box {overflow-x:auto; border-radius:10px;}
 .market-table {width:100%; border-collapse:collapse; background:#1e293b;}
 .market-table th {background:#020617; padding:12px; text-align:left; font-weight:600;}
@@ -162,3 +187,557 @@ body {margin:0; font-family: Arial, sans-serif; background:#0f172a; color:#fff;}
         margin-top: -340px;
     }
 }
+
+
+/* ================================= */
+
+/* افتراضياً العناصر مخفية ومتحركة للأسفل */
+section .fade-slide {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+}
+
+/* عند الظهور */
+section.show .fade-slide {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* ================================= */
+
+
+/* ================================== */
+#progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px; /* سمك الخط */
+    background: rgba(0,0,0,0.1); /* خلفية خفيفة */
+    z-index: 9999;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(to right, #1e90ff, #00ffcc);
+    transition: width 0.2s ease-out, background 0.5s ease;
+}
+/* ================================== */
+
+/* ================================== */
+
+/* ===============================
+   Custom Scrollbar - Chrome, Edge, Safari
+   =============================== */
+::-webkit-scrollbar {
+    width: 12px;                     /* عرض شريط التمرير */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);    /* خلفية المسار */
+    border-radius: 6px;              /* حواف مدورة */
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #1e90ff, #00ffcc); /* لون متدرج */
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #ff7f50, #ff1493); /* يتغير عند hover */
+}
+
+/* ===============================
+   Custom Scrollbar - Firefox
+   =============================== */
+* {
+    scrollbar-width: thin;                       /* thin, auto, none */
+    scrollbar-color: #1e90ff rgba(0,0,0,0.05);  /* thumb color + track color */
+}
+
+/* ===============================
+   Smooth scrolling for the page
+   =============================== */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ================================== */
+
+
+/* ================================== */
+
+#scroll-top {
+    position: fixed;
+    bottom: 30px;               /* المسافة من الأسفل */
+    right: 30px;                /* المسافة من اليمين */
+    background: #1e90ff;        /* لون الخلفية */
+    color: white;               /* لون الأيقونة */
+    padding: 12px 15px;
+    border-radius: 50%;         /* دائري */
+    font-size: 18px;
+    display: none;              /* مخفي افتراضيًا */
+    cursor: pointer;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+#scroll-top:hover {
+    background: #00ffcc;       /* يتغير عند hover */
+    transform: scale(1.1);     /* تكبير خفيف عند hover */
+}
+
+/* ================================== */
+
+/* Start Section Companys */
+.companys-section .container .h1-companys {
+    text-align: center;
+    margin: 30px 0;
+    color: blue;
+    font-size: 35px;
+}
+
+/* Grid الرئيسي للبطاقات */
+.companys-section .container .card-companys {
+    display: grid;
+    text-align: center;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    justify-items: center;
+}
+
+/* صور الشركات */
+.companys-section .container .card-companys img {
+    width: 400px;
+    max-width: 100%;
+    margin: 20px 0;
+}
+
+/* أزرار الشركات */
+.companys-section .container .card-companys button {
+    width: 30%;
+    padding: 10px;
+    background-color: yellow;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+}
+.companys-section .container .card-companys button:hover {
+    background-color: blue;
+    color: black;
+}
+
+/* ========== Media Queries لتكون متجاوبة من 1200px إلى 250px ========== */
+
+/* Large screens: 1200px وأكبر */
+@media (min-width: 1200px) {
+    .companys-section .container .card-companys {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    .companys-section .container .h1-companys {
+        font-size: 35px;
+    }
+    .companys-section .container .card-companys img {
+        width: 400px;
+    }
+        .companys-section .container .card-companys button {
+        width: 50%;
+        font-size: 13px;
+    }
+}
+
+/* Medium screens: 992px - 1199px */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .companys-section .container .card-companys {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+    }
+    .companys-section .container .h1-companys {
+        font-size: 32px;
+    }
+    .companys-section .container .card-companys img {
+        width: 350px;
+    }
+        .companys-section .container .card-companys button {
+        width: 50%;
+        font-size: 13px;
+    }
+}
+
+/* Small screens: 768px - 991px */
+@media (max-width: 991px) and (min-width: 768px) {
+    .companys-section .container .card-companys {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .companys-section .container .h1-companys {
+        font-size: 30px;
+    }
+    .companys-section .container .card-companys img {
+        width: 300px;
+    }
+        .companys-section .container .card-companys button {
+        width: 50%;
+        font-size: 12px;
+    }
+}
+
+/* Extra Small screens: 590px - 767px */
+@media (max-width: 767px) and (min-width: 590px) {
+    .companys-section .container .card-companys {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .companys-section .container .h1-companys {
+        font-size: 28px;
+    }
+    .companys-section .container .card-companys img {
+        width: 250px;
+    }
+        .companys-section .container .card-companys button {
+        width: 50%;
+        font-size: 10px;
+    }
+}
+
+/* Very Small screens: 400px - 589px */
+@media (max-width: 589px) and (min-width: 400px) {
+        .companys-section .container .card-companys {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .companys-section .container .h1-companys {
+        font-size: 24px;
+    }
+    .companys-section .container .card-companys img {
+        width: 200px;
+    }
+    .companys-section .container .card-companys button {
+        width: 50%;
+        font-size: 7px;
+    }
+}
+
+/* Extra Tiny screens: 250px - 399px */
+@media (max-width: 399px) and (min-width: 250px) {
+        .companys-section .container .card-companys {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .companys-section .container .h1-companys {
+        font-size: 20px;
+    }
+    .companys-section .container .card-companys img {
+        width: 150px;
+    }
+    .companys-section .container .card-companys button {
+        width: 60%;
+        font-size: 5px;
+    }
+}
+@media (max-width: 250px) {
+        .companys-section .container .card-companys {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+/* End Section Companys */
+
+/* HR */
+
+/* أنيميشن للـhr */
+.animated-hr {
+    border: none;
+    height: 4px; /* سمك الخط */
+    width: 80%; /* طول الخط */
+    margin: 40px auto; /* توسيط الخط */
+    background: linear-gradient(90deg, #1e90ff, #00ffcc, #ff7f50, #1e90ff);
+    background-size: 300% 100%;
+    border-radius: 2px;
+    animation: hrMove 2s linear infinite alternate , fadeIn 1s ease forwards;
+    opacity: 0; /* للfadeIn */
+}
+
+/* حركة gradient */
+@keyframes hrMove {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 0%;
+    }
+}
+
+/* Fade In */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* HR */
+
+
+/* Start Recommendations Section  */
+
+/* Start Recommendations Section */
+.recommendations-section {
+    margin-top: 100px;
+}
+
+/* العنوان الرئيسي */
+.recommendations-section .container .h1-recommendations {
+    text-align: center;
+    margin: 30px 0;
+    color: blue;
+    font-size: 35px;
+}
+
+/* النصوص الثانوية */
+.recommendations-section h3 {
+    text-align: center;
+    margin: 20px 0;
+    color: rgb(141, 196, 255);
+}
+
+/* Grid البطاقات */
+.recommendations-section .plans {
+    margin: 30px 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-items: center;
+}
+
+.recommendations-section .plans .card {
+    text-align: center;
+}
+
+.recommendations-section .plans .card img {
+    width: 200px;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+
+.recommendations-section .plans .card h4 {
+    color: yellow;
+}
+
+/* أيقونات التواصل الاجتماعي */
+.recommendations-section .container .media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.recommendations-section .container .media a i {
+    font-size: 40px;
+    transition: 0.5s;
+    margin: 30px 0;
+}
+
+.recommendations-section .container .media .fa-telegram {
+    color: blue;
+}
+
+.recommendations-section .container .media .fa-whatsapp {
+    color: green;
+}
+
+.recommendations-section .container .media .fa-facebook {
+    color: blue;
+}
+
+.recommendations-section .container .media .fa-instagram {
+    color: #e1306c;
+}
+
+.recommendations-section .container .media a i:hover {
+    color: yellow;
+}
+
+/* الشركة الفردية */
+.recommendations-section .container .cpmpany-1 {
+    text-align: center;
+    margin: 35px 0;
+}
+
+.recommendations-section .container .cpmpany-1 img {
+    width: 400px;
+    max-width: 100%;
+    margin: 20px 0;
+}
+
+.recommendations-section .container .cpmpany-1 button {
+    width: 30%;
+    padding: 10px;
+    background-color: yellow;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.recommendations-section .container .cpmpany-1 button:hover {
+    background-color: blue;
+    color: black;
+}
+
+/* ================= Media Queries من 1200px إلى 250px ================= */
+
+/* Large screens: 1200px وأكبر */
+@media (min-width: 1200px) {
+    .recommendations-section .container .h1-recommendations { font-size: 35px; }
+    .recommendations-section .plans { grid-template-columns: repeat(4,1fr); gap: 20px; }
+    .recommendations-section .plans .card img { width: 200px; }
+    .recommendations-section .container .cpmpany-1 img { width: 400px; }
+    .recommendations-section .container .cpmpany-1 button { width: 30%; font-size: 16px; }
+}
+
+/* Medium screens: 992px - 1199px */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .recommendations-section .container .h1-recommendations { font-size: 32px; }
+    .recommendations-section .plans { grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .recommendations-section .plans .card img { width: 180px; }
+    .recommendations-section .container .cpmpany-1 img { width: 350px; }
+    .recommendations-section .container .cpmpany-1 button { width: 35%; font-size: 15px; }
+}
+
+/* Small screens: 768px - 991px */
+@media (max-width: 991px) and (min-width: 768px) {
+    .recommendations-section .container .h1-recommendations { font-size: 30px; }
+    .recommendations-section .plans { grid-template-columns: repeat(2,1fr); gap: 15px; }
+    .recommendations-section .plans .card img { width: 160px; }
+    .recommendations-section .container .cpmpany-1 img { width: 300px; }
+    .recommendations-section .container .cpmpany-1 button { width: 40%; font-size: 10px; }
+}
+
+/* Extra Small screens: 590px - 767px */
+@media (max-width: 767px) and (min-width: 590px) {
+    .recommendations-section .container .h1-recommendations { font-size: 28px; }
+    .recommendations-section .plans { grid-template-columns: 1fr; gap: 15px; }
+    .recommendations-section .plans .card img { width: 140px; }
+    .recommendations-section .container .cpmpany-1 img { width: 250px; }
+    .recommendations-section .container .cpmpany-1 button { width: 45%; font-size: 10px; }
+}
+/* Very Small screens: 400px - 589px */
+@media (max-width: 589px) and (min-width: 400px) {
+    .recommendations-section .container .h1-recommendations { font-size: 24px; }
+    .recommendations-section .plans .card img { width: 120px; }
+    .recommendations-section .plans { grid-template-columns: 1fr; gap: 15px; }
+    .recommendations-section .container .cpmpany-1 img { width: 200px; }
+    .recommendations-section .container .cpmpany-1 button { width: 50%; font-size: 13px; }
+    .recommendations-section h3 { font-size: 16px; }
+    .recommendations-section .container .media a i { font-size: 35px; }
+}
+
+/* Extra Tiny screens: 250px - 399px */
+@media (max-width: 399px) and (min-width: 250px) {
+    .recommendations-section .container .h1-recommendations { font-size: 20px; }
+    .recommendations-section .plans .card img { width: 100px; }
+    .recommendations-section .plans { grid-template-columns: 1fr; gap: 15px; }
+    .recommendations-section .container .cpmpany-1 img { width: 150px; }
+    .recommendations-section .container .cpmpany-1 button { width: 60%; font-size: 12px; }
+    .recommendations-section h3 { font-size: 14px; }
+    .recommendations-section .container .media a i { font-size: 30px; }
+}
+@media (max-width: 250px) {
+    .recommendations-section .plans { grid-template-columns: 1fr; gap: 15px; }
+}
+@media (max-width: 350px) {
+    h3,h2,h4,h1 {
+        font-size: 10px;
+    }
+}
+/* End Recommendations Section */
+/* End Recommendations Section  */
+
+
+
+/* Start Contact us Section  */
+
+.contact-us .h1-contact-us {
+    text-align: center;
+    margin: 30px 0;
+    color: blue;
+    font-size: 35px;
+}
+.contact-us h3 {
+    text-align: center;
+    margin: 20px 0;
+    color: rgb(141, 196, 255);
+}
+
+/* أيقونات التواصل الاجتماعي */
+
+.contact-us a i {
+    font-size: 40px;
+    transition: 0.5s;
+    margin: 30px 0;
+}
+
+.contact-us .fa-telegram {
+    color: blue;
+}
+
+.contact-us .fa-whatsapp {
+    color: green;
+}
+
+.contact-us .fa-facebook {
+    color: blue;
+}
+
+.contact-us .fa-instagram {
+    color: #e1306c;
+}
+
+.contact-us a i:hover {
+    color: yellow;
+}
+.contact-us .container .card {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+@media (max-width: 250px) {
+    .contact-us .container .card i {
+        font-size: 20px;
+    }
+}
+@media (max-width: 350px) {
+    .contact-us h1 {
+        font-size: 12px;
+    }
+    .contact-us h3 {
+        font-size: 10px;
+    }
+    .contact-us a i {
+        font-size: 14px;
+    }
+}
+/* End Contact us Section  */
+
+/* Start Footer */
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+footer i {
+    color: blue;
+    transform: 0.5s;
+    font-size: 20px;
+    margin: 0 10px;
+}
+footer i:hover {
+    color: yellow;
+    transform: scale(1.2);
+}
+/* End Footer */

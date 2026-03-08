@@ -10,16 +10,20 @@
 </head>
 <body>
     <!-- Header -->
-<header>
+<header id="Header">
+    <!-- Progress Bar أعلى الصفحة -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
     <div class="container">
-        <div class="logo"><a href="#">Forex</a></div>
+        <div class="logo"><a href="#Header">Forex</a></div>
         <nav>
             <ul id="nav-list">
-                <a href="#"><li>Home</li></a>
-                <a href="#"><li>Forex companies</li></a>
-                <a href="#"><li>Books</li></a>
-                <a href="#"><li>Recommendations</li></a>
-                <a href="#"><li>Contact us</li></a>
+                <a href="#Home"><li>Home</li></a>
+                <a href="#Market"><li>Markets</li></a>
+                <a href="#companys-section"><li>Forex companies</li></a>
+                <a href="#recommendations"><li>Recommendations</li></a>
+                <a href="#contact-us"><li>Contact us</li></a>
             </ul>
         </nav>
         <div id="menu-toggle">
@@ -31,16 +35,16 @@
 </header>
 
 <!-- Landing Page -->
-<section class="landing">
+<section class="landing" id="Home">
     <video src="VIDEOS/Forex Trading Background Video(1080P_HD).mp4" autoplay muted loop poster="IMGES/Bac_Video.jpg"></video>
     <div class="container">
         <h2>With <span><i>Forex</i></span> Company<br> you will begin to change your life</h2>
     </div>
 </section>
-<section class="market-section">
-    <div class="container">
+<section class="market-section" id="Market">
+    <div class="container fade-slide">
 
-  <h2 class="market-title">Live Market (Fake Change + Arrows)</h2>
+  <h2 class="market-title fade-slide">direct markets</h2>
   <div class="market-table-box">
     <table class="market-table">
       <thead>
@@ -57,8 +61,152 @@
   </div>
   </div>
 </section>
-
-<!-- JS for hamburger -->
+<!-- Start Section Companys -->
+    <section class="companys-section" id="companys-section">
+        <div class="container">
+            <h1 class="h1-companys fade-slide">Forex companies</h1>
+        </div>
+        <div class="container">
+            <div class="card-companys fade-slide">
+            <div class="cpmpany-1 fade-slide">
+                <h2>Exness Company</h2>
+                <img src="IMGES/exness.jpg" alt="Exness Company">
+                <br>
+                <a href="#"><button>Open an account</button></a>
+            </div>
+            <div class="cpmpany-2 fade-slide">
+                <h2>XM Company</h2>
+                <img src="IMGES/xm.png" alt="XM Company">
+                <br>
+                <a href="#"><button>Open an account</button></a>
+            </div>
+        </div>
+        </div>
+        <hr class="animated-hr">
+                <div class="container">
+            <h1 class="h1-companys fade-slide">Best financing companies</h1>
+        </div>
+        <div class="container">
+            <div class="card-companys fade-slide">
+            <div class="cpmpany-1 fade-slide">
+                <h2>FTMO Company</h2>
+                <img src="IMGES/ftmo.jpg" alt="FTMO Company">
+                <br>
+                <a href="#"><button>Open an account</button></a>
+            </div>
+            <div class="cpmpany-2 fade-slide">
+                <h2>the5%ers company</h2>
+                <img src="IMGES/unnamed.png" alt="the5%ers Company">
+                <br>
+                <a href="#"><button>Open an account</button></a>
+            </div>
+        </div>
+    </section>
+<!-- End Section Companys -->
+ <!-- Start Recommendations Section -->
+    <section class="recommendations-section" id="recommendations">
+        <div class="container">
+            <h1 class="h1-recommendations fade-slide">Recommendations</h1>
+        </div>
+        <div class="container">
+            <h3 class="fade-slide">Join the Alpha Forex Telegram channel now and get recommendations on all currency pairs.</h3>
+        </div>
+        <div class="container">
+            <div class="plans fade-slide">
+                <div class="card fade-slide">
+                    <img src="IMGES/plan(1).png" alt="">
+                    <h4>monthly subscription</h4>
+                </div>
+                <div class="card fade-slide">
+                    <img src="IMGES/plan(2).png" alt="">
+                    <h4>Quarterly subscription</h4>
+                </div>
+                <div class="card fade-slide">
+                    <img src="IMGES/plan(3).png" alt="">
+                    <h4>Semi-annual subscription</h4>
+                </div>
+                <div class="card">
+                    <img src="IMGES/plan(4).png" alt="">
+                    <h4>Annual subscription</h4>
+                </div>
+            </div>
+        </div>
+        <hr class="animated-hr">
+        <div class="container">
+            <h3 class="fade-slide">Contact technical support to request a suitable subscription period and specify a payment method.</h3>
+            <div class="media">
+                <a href="#"><i class="fab fa-telegram fade-slide"></i></a>
+                <a href="#"><i class="fab fa-whatsapp fade-slide"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook fade-slide"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram fade-slide"></i></a>
+            </div>
+        </div>
+        <hr class="animated-hr">
+        <div class="join-free">
+            <div class="container">
+                <h3 class="fade-slide">You can join the team for free by opening a trading account with Exness.</h3>
+            </div>
+            <div class="container">
+                        <div class="cpmpany-1 fade-slide">
+                <h2>Exness Company</h2>
+                <img src="IMGES/exness.jpg" alt="Exness Company">
+                <br>
+                <a href="#"><button>Open an account</button></a>
+            </div>
+            </div>
+            <div class="container">
+                <h3 class="fade-slide">After creating your account, contact us to be added to the channel.</h3>
+                     <div class="media">
+                <a href="#"><i class="fab fa-telegram fade-slide"></i></a>
+                <a href="#"><i class="fab fa-whatsapp fade-slide"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook fade-slide"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram fade-slide"></i></a>
+            </div>
+            </div>
+        </div>
+    </section>
+     <hr class="animated-hr">
+ <!-- End Recommendations Section -->
+  <!-- Start Contact us Section -->
+   <section class="contact-us" id="contact-us">
+        <div class="container">
+            <h1 class="h1-contact-us fade-slide">Contact us</h1>
+        </div>
+        <div class="container">
+            <h3 class="fade-slide">You can contact technical support</h3>
+        </div>
+        <div class="container">
+            <div class="contacts">
+                <div class="card">
+                    <h4 class="fade-slide">Telegram</h4>
+                    <a href="#"><i class="fab fa-telegram fade-slide"></i></a>
+                </div>
+                <div class="card">
+                    <h4 class="fade-slide">Whatsapp</h4>
+                    <a href="#"><i class="fab fa-whatsapp fade-slide"></i></a>
+                </div>
+                <div class="card">
+                    <h4 class="fade-slide">Facebook</h4>
+                    <a href="#"><i class="fa-brands fa-facebook fade-slide"></i></a>
+                </div>
+                <div class="card">
+                    <h4 class="fade-slide">Instagram</h4>
+                    <a href="#"><i class="fa-brands fa-instagram fade-slide"></i></a>
+                </div>
+            </div>
+        </div>
+   </section>
+  <!-- End Contact us Section -->
+   <!-- Start Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Forex Company. By Eng ICT <a href="https://www.facebook.com/fx.lord.ict"><i class="fa-brands fa-facebook"></i></a></p>
+        </div>
+    </footer>
+   <!-- End Footer -->
+    <!-- Scroll to Top Button -->
+    <a href="#" id="scroll-top"><i class="fas fa-arrow-up"></i></a>
+    <!-- JS for hamburger -->
 <script src="JavaScript/script.js"></script>
 
 </body>
