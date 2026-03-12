@@ -1,34 +1,33 @@
+from telegram import Update
+from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from telegram import Update, Bot
-from telegram.ext import ApplicationBuilder, ContextTypes
+import requests
 import json
 from datetime import datetime
-import os
 
-# ---------------- Configuration ----------------
-BOT_TOKEN = "8633209473:AAFIhyWX1RzBjl7XrJAVFFOPTrV7LeXAEMg"
-DATA_FILE = "signals.json"
-
-# ---------------- Flask setup ----------------
 app = Flask(__name__)
 CORS(app)
 
-# تحميل بيانات التوصيات إذا موجودة
-if os.path.exists(DATA_FILE):
-    with open(DATA_FILE, "r") as f:
+DATA_FILE = "signals.json"
+
+# تحميل البيانات
+try:
+    with open(DATA_FILE,"r") as f:
         signals = json.load(f)
-else:
+except:
     signals = []
 
 def save_data():
-    with open(DATA_FILE, "w") as f:
-        json.dump(signals, f)
+    with open(DATA_FILE,"w") as f:
+        json.dump(signals,f)
 
-# ---------------- Routes ----------------
 @app.route("/signals")
 def get_signals():
-    return jsonify(signals)
+    active = [s for s in signals if s["active"]]
+    closed = [s for s in signals if not s["active"]]
+    ordered = active[::-1] + closed[::-1]
+    return jsonify(ordered)
 
 @app.route("/stats")
 def stats():
@@ -38,53 +37,84 @@ def stats():
     winrate = round((wins/total)*100,2) if total>0 else 0
     pips = sum([s.get("pips",0) for s in signals])
     return jsonify({
-        "total": total,
-        "wins": wins,
-        "losses": losses,
-        "winrate": winrate,
-        "pips": pips
+        "total":total,
+        "wins":wins,
+        "losses":losses,
+        "winrate":winrate,
+        "pips":pips
     })
 
-# ---------------- Telegram Webhook ----------------
-bot = Bot(token=BOT_TOKEN)
-app_telegram = ApplicationBuilder().token(BOT_TOKEN).build()
+@app.route("/add-signal", methods=["POST"])
+def add_signal():
+    signal = request.json
+    existing = next((s for s in signals if s["id"]==signal["id"]), None)
+    if existing:
+        existing.update(signal)
+    else:
+        signal["time"] = datetime.now().strftime("%Y-%m-%d %H:%M")
+        signals.append(signal)
+    save_data()
+    return jsonify({"status":"added/updated"})
 
-@app.route(f"/{BOT_TOKEN}", methods=["POST"])
-def telegram_webhook():
-    """ استقبال رسائل البوت عن طريق Webhook """
-    try:
-        update = Update.de_json(request.get_json(force=True), bot)
-        msg = update.message.text.strip()
+@app.route("/delete-signal", methods=["POST"])
+def delete_signal():
+    signal_id = request.json.get("id")
+    global signals
+    signals = [s for s in signals if s["id"] != signal_id]
+    save_data()
+    return jsonify({"status":"deleted"})
 
-        # تقسيم الرسالة | ID|Type|Pair|Entry|SL|Targets|Status
-        parts = [p.strip() for p in msg.split("|")]
-        if len(parts) >= 7:
-            signal = {
-                "id": parts[0],
-                "type": parts[1],
-                "pair": parts[2],
-                "entry": parts[3],
-                "sl": parts[4],
-                "targets": parts[5].split(),
-                "active": "🟢" in parts[6],
-                "pips": 0,
-                "time": datetime.now().strftime("%Y-%m-%d %H:%M")
-            }
-            # تحديث إذا موجود
-            existing = next((s for s in signals if s["id"]==signal["id"]), None)
-            if existing:
-                existing.update(signal)
-            else:
-                signals.append(signal)
-            save_data()
-        return "ok"
-    except Exception as e:
-        return str(e)
-
-# ---------------- Clear signals (اختياري) ----------------
 @app.route("/clear-signals", methods=["POST"])
 def clear_signals():
     global signals
     signals = []
     save_data()
-    return jsonify({"status": "all deleted"})
+    return jsonify({"status":"all deleted"})
+
+
+TOKEN = "8633209473:AAFIhyWX1RzBjl7XrJAVFFOPTrV7LeXAEMg"
+
+async def handle(update:Update, context:ContextTypes.DEFAULT_TYPE):
+    msg = update.message.text.strip()
+    parts = [p.strip() for p in msg.split("|")]
+
+    # حذف كل التوصيات
+    if msg.lower() == "delete all":
+        requests.post("https://ictfx.pythonanywhere.com/clear-signals")
+        await update.message.reply_text("✅ All signals deleted successfully")
+        return
+
+    # حذف توصية فردية
+    if len(parts)==2 and parts[1].lower()=="delete":
+        requests.post("https://ictfx.pythonanywhere.com/delete-signal", json={"id": parts[0]})
+        await update.message.reply_text(f"✅ Signal {parts[0]} deleted")
+        return
+
+    # إضافة / تعديل توصية
+    if len(parts)<7:
+        await update.message.reply_text("❌ Incorrect format! Use ID|Type|Pair|Entry|SL|Targets|Status")
+        return
+
+    signal = {
+        "id": parts[0],
+        "type": parts[1],
+        "pair": parts[2],
+        "entry": parts[3],
+        "sl": parts[4],
+        "targets": parts[5].split(),
+        "active": "🟢" in parts[6],
+        "pips":0
+    }
+    requests.post("https://ictfx.pythonanywhere.com/add-signal", json=signal)
+    await update.message.reply_text("✅ Signal added/updated")
+
+def run_bot():
+    bot = ApplicationBuilder().token(TOKEN).build()
+    bot.add_handler(
+        MessageHandler(filters.TEXT & (~filters.COMMAND), handle)
+    )
+    bot.run_polling()
+
+
+# === لا تشغل Flask عبر WSGI مع app.run ===
+# عند رفعه على PythonAnywhere سيشتغل تلقائياً عبر WSGI

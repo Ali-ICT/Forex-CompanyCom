@@ -3,30 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <title>Trading Signals</title>
-<link rel="icon" href="IMGES/Bac_Video.jpg" type="image/x-icon">
-
 <style>
-body{
-  font-family:Arial;
-  background:#0f172a;
-  color:white;
-  padding:30px;
-}
-h1{ text-align:center; color: blue; }
-.stats{ display:flex; gap:20px; justify-content:center; margin-bottom:30px; }
-.box{ background:#1e293b; padding:15px 25px; border-radius:8px; }
-.filters{ text-align:center; margin-bottom:20px; }
-button{ padding:8px 15px; margin:5px; cursor:pointer; }
-table{ width:100%; border-collapse:collapse; }
-th,td{ padding:10px; border-bottom:1px solid #333; text-align:center; }
-.buy{ color:#22c55e; }
-.sell{ color:#ef4444; }
-.active{ color:#22c55e; }
-.closed{ color:#ef4444; }
-.change.up{ color:#22c55e; }
-.change.down{ color:#ef4444; }
+body{ font-family:Arial; background:#0f172a; color:white; padding:30px }
+h1{text-align:center; color: blue}
+.stats{display:flex; gap:20px; justify-content:center; margin-bottom:30px}
+.box{background:#1e293b; padding:15px 25px; border-radius:8px}
+table{width:100%; border-collapse:collapse}
+th,td{padding:10px; border-bottom:1px solid #333; text-align:center}
+.buy{color:#22c55e} .sell{color:#ef4444} .active{color:#22c55e} .closed{color:#ef4444}
 </style>
-
 </head>
 <body>
 
@@ -38,43 +23,24 @@ th,td{ padding:10px; border-bottom:1px solid #333; text-align:center; }
   <div class="box">Total Pips: <span id="pips"></span></div>
 </div>
 
-<div class="filters">
-  <button onclick="filter='all'">All</button>
-  <button onclick="filter='active'">Active</button>
-  <button onclick="filter='closed'">Closed</button>
-</div>
-
 <table>
 <thead>
 <tr>
-  <th>ID</th>
-  <th>Type</th>
-  <th>Pair</th>
-  <th>Entry Price</th>
-  <th>Stop Loss</th>
-  <th>Targets</th>
-  <th>Status</th>
-  <th>Date</th>
+<th>ID</th><th>Type</th><th>Pair</th><th>Entry Price</th>
+<th>Stop Loss</th><th>Targets</th><th>Status</th><th>Date</th>
 </tr>
 </thead>
 <tbody id="signals"></tbody>
 </table>
 
 <script>
-let filter="all";
-
 async function loadSignals(){
   try {
-    let r = await fetch("https://ictfx.pythonanywhere.com/signals");
-    let data = await r.json();
-
-    let html="";
+    let res = await fetch("https://ictfx.pythonanywhere.com/signals")
+    let data = await res.json()
+    let html = ""
     data.forEach(s=>{
-      if(filter=="active" && !s.active) return;
-      if(filter=="closed" && s.active) return;
-
-      html+=
-      <tr>
+      html += `<tr>
         <td>${s.id}</td>
         <td class="${s.type.includes('⬆️')?'buy':'sell'}">${s.type}</td>
         <td>${s.pair}</td>
@@ -83,35 +49,30 @@ async function loadSignals(){
         <td>${s.targets.join(" ")}</td>
         <td class="${s.active?'active':'closed'}">${s.active?'Active':'Closed'}</td>
         <td>${s.time}</td>
-      </tr>;
-    });
-
-    document.getElementById("signals").innerHTML=html;
-  } catch(err){
-    console.error("Error loading signals:", err);
-  }
+      </tr>`
+    })
+    document.getElementById("signals").innerHTML = html
+  } catch(e){ console.error(e) }
 }
 
 async function loadStats(){
   try {
-    let r = await fetch("https://ictfx.pythonanywhere.com/stats");
-    let s = await r.json();
-
-    document.getElementById("total").innerText = s.total;
-    document.getElementById("winrate").innerText = s.winrate;
-    document.getElementById("pips").innerText = s.pips;
-  } catch(err){
-    console.error("Error loading stats:", err);
-  }
+    let r = await fetch("https://ictfx.pythonanywhere.com/stats")
+    let s = await r.json()
+    document.getElementById("total").innerText = s.total
+    document.getElementById("winrate").innerText = s.winrate
+    document.getElementById("pips").innerText = s.pips
+  } catch(e){ console.error(e) }
 }
 
+// تحديث تلقائي
 setInterval(()=>{
-  loadSignals();
-  loadStats();
-},3000);
+  loadSignals()
+  loadStats()
+}, 3000)
 
-loadSignals();
-loadStats();
+loadSignals()
+loadStats()
 </script>
 
 </body>
