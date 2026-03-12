@@ -120,7 +120,7 @@ let filter="all"
 
 async function loadSignals(){
 
-let r = await fetch("http://127.0.0.1:5000/signals")
+let r = await fetch("https://ictfx.pythonanywhere.com/signals")
 let data = await r.json()
 
 let html=""
@@ -154,7 +154,7 @@ document.getElementById("signals").innerHTML=html
 
 async function loadStats(){
 
-let r = await fetch("http://127.0.0.1:5000/stats")
+let r = await fetch("https://ictfx.pythonanywhere.com/stats")
 let s = await r.json()
 
 document.getElementById("total").innerText=s.total
