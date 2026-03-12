@@ -1,184 +1,184 @@
-import json
-import websocket
-import threading
-import random
-import string
-import time
-from flask import Flask, jsonify
-from flask_cors import CORS
+# import json
+# import websocket
+# import threading
+# import random
+# import string
+# import time
+# from flask import Flask, jsonify
+# from flask_cors import CORS
 
-# ---------------------------
-# تخزين الأسعار
-# ---------------------------
+# # ---------------------------
+# # تخزين الأسعار
+# # ---------------------------
 
-price_data = {}
-previous_prices = {}
+# price_data = {}
+# previous_prices = {}
 
-# ---------------------------
-# Flask API
-# ---------------------------
+# # ---------------------------
+# # Flask API
+# # ---------------------------
 
-app = Flask(__name__)
-CORS(app)
+# app = Flask(__name__)
+# CORS(app)
 
-@app.route("/prices")
-def get_prices():
+# @app.route("/prices")
+# def get_prices():
 
-    data = {}
+#     data = {}
 
-    for symbol, price in price_data.items():
+#     for symbol, price in price_data.items():
 
-        prev = previous_prices.get(symbol, price)
+#         prev = previous_prices.get(symbol, price)
 
-        data[symbol] = {
-            "price": price,
-            "change": round(price - prev, 5),
-            "high": price,
-            "low": round(price - 0.08, 5)
-        }
+#         data[symbol] = {
+#             "price": price,
+#             "change": round(price - prev, 5),
+#             "high": price,
+#             "low": round(price - 0.08, 5)
+#         }
 
-    return jsonify(data)
+#     return jsonify(data)
 
 
-def run_flask():
+# def run_flask():
 
-    print("🌐 Flask API running on http://127.0.0.1:5002/prices")
+#     print("🌐 Flask API running on http://127.0.0.1:5002/prices")
 
-    app.run(
-        host="0.0.0.0",
-        port=5002,
-        debug=False,
-        use_reloader=False
-    )
+#     app.run(
+#         host="0.0.0.0",
+#         port=5002,
+#         debug=False,
+#         use_reloader=False
+#     )
 
 
-# ---------------------------
-# أدوات WebSocket
-# ---------------------------
+# # ---------------------------
+# # أدوات WebSocket
+# # ---------------------------
 
-def random_session():
-    return "qs_" + "".join(random.choice(string.ascii_lowercase) for _ in range(12))
+# def random_session():
+#     return "qs_" + "".join(random.choice(string.ascii_lowercase) for _ in range(12))
 
 
-def send(ws, message):
-    ws.send("~m~" + str(len(message)) + "~m~" + message)
+# def send(ws, message):
+#     ws.send("~m~" + str(len(message)) + "~m~" + message)
 
 
-def create_message(func, args):
-    return json.dumps({"m": func, "p": args})
+# def create_message(func, args):
+#     return json.dumps({"m": func, "p": args})
 
 
-# ---------------------------
-# استقبال الأسعار
-# ---------------------------
+# # ---------------------------
+# # استقبال الأسعار
+# # ---------------------------
 
-def on_message(ws, message):
+# def on_message(ws, message):
 
-    global price_data, previous_prices
+#     global price_data, previous_prices
 
-    try:
+#     try:
 
-        if "lp" in message:
+#         if "lp" in message:
 
-            raw = message.split("~")[-1]
+#             raw = message.split("~")[-1]
 
-            data = json.loads(raw)
+#             data = json.loads(raw)
 
-            if isinstance(data, dict) and "p" in data:
+#             if isinstance(data, dict) and "p" in data:
 
-                items = data["p"]
+#                 items = data["p"]
 
-                for item in items:
+#                 for item in items:
 
-                    if isinstance(item, dict):
+#                     if isinstance(item, dict):
 
-                        symbol = item.get("n")
-                        values = item.get("v")
+#                         symbol = item.get("n")
+#                         values = item.get("v")
 
-                        if symbol and values:
+#                         if symbol and values:
 
-                            price = values.get("lp")
+#                             price = values.get("lp")
 
-                            if isinstance(price, (int, float)):
+#                             if isinstance(price, (int, float)):
 
-                                clean_symbol = symbol.replace("OANDA:", "")
+#                                 clean_symbol = symbol.replace("OANDA:", "")
 
-                                previous_prices[clean_symbol] = price_data.get(clean_symbol, price)
+#                                 previous_prices[clean_symbol] = price_data.get(clean_symbol, price)
 
-                                price_data[clean_symbol] = price
+#                                 price_data[clean_symbol] = price
 
-                                print(f"📈 {clean_symbol} = {price}")
+#                                 print(f"📈 {clean_symbol} = {price}")
 
-    except Exception as e:
+#     except Exception as e:
 
-        print("❌ WebSocket Error:", e)
+#         print("❌ WebSocket Error:", e)
 
 
-# ---------------------------
-# عند الاتصال
-# ---------------------------
+# # ---------------------------
+# # عند الاتصال
+# # ---------------------------
 
-def on_open(ws):
+# def on_open(ws):
 
-    try:
+#     try:
 
-        session = random_session()
+#         session = random_session()
 
-        send(ws, create_message("quote_create_session", [session]))
+#         send(ws, create_message("quote_create_session", [session]))
 
-        send(ws, create_message("quote_set_fields", [session, "lp"]))
+#         send(ws, create_message("quote_set_fields", [session, "lp"]))
 
-        symbols = [
-            "OANDA:XAUUSD",
-            "OANDA:EURUSD",
-            "OANDA:GBPUSD",
-            "OANDA:USDJPY",
-            "OANDA:USDCHF"
-        ]
+#         symbols = [
+#             "OANDA:XAUUSD",
+#             "OANDA:EURUSD",
+#             "OANDA:GBPUSD",
+#             "OANDA:USDJPY",
+#             "OANDA:USDCHF"
+#         ]
 
-        for s in symbols:
-            send(ws, create_message("quote_add_symbols", [session, s]))
+#         for s in symbols:
+#             send(ws, create_message("quote_add_symbols", [session, s]))
 
-        print("📡 Connected to TradingView WebSocket")
+#         print("📡 Connected to TradingView WebSocket")
 
-    except Exception as e:
+#     except Exception as e:
 
-        print("❌ WebSocket Open Error:", e)
+#         print("❌ WebSocket Open Error:", e)
 
 
-# ---------------------------
-# تشغيل WebSocket
-# ---------------------------
+# # ---------------------------
+# # تشغيل WebSocket
+# # ---------------------------
 
-def start_ws():
+# def start_ws():
 
-    while True:
+#     while True:
 
-        try:
+#         try:
 
-            ws = websocket.WebSocketApp(
-                "wss://data.tradingview.com/socket.io/websocket",
-                on_message=on_message,
-                on_open=on_open
-            )
+#             ws = websocket.WebSocketApp(
+#                 "wss://data.tradingview.com/socket.io/websocket",
+#                 on_message=on_message,
+#                 on_open=on_open
+#             )
 
-            ws.run_forever()
+#             ws.run_forever()
 
-        except Exception as e:
+#         except Exception as e:
 
-            print("🔄 Reconnecting:", e)
+#             print("🔄 Reconnecting:", e)
 
-            time.sleep(5)
+#             time.sleep(5)
 
 
-# ---------------------------
-# تشغيل السيرفر
-# ---------------------------
+# # ---------------------------
+# # تشغيل السيرفر
+# # ---------------------------
 
-threading.Thread(target=run_flask, daemon=True).start()
+# threading.Thread(target=run_flask, daemon=True).start()
 
-threading.Thread(target=start_ws, daemon=True).start()
+# threading.Thread(target=start_ws, daemon=True).start()
 
-# إبقاء البرنامج شغال
-while True:
-    time.sleep(1)
+# # إبقاء البرنامج شغال
+# while True:
+#     time.sleep(1)

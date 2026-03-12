@@ -1,176 +1,141 @@
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Trading Signals</title>
+<link rel="icon" href="IMGES/Bac_Video.jpg" type="image/x-icon">
 
 <style>
-
 body{
-font-family:Arial;
-background:#0f172a;
-color:white;
-padding:30px;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+  padding:30px;
 }
 
 h1{
-text-align:center;
-color: blue;
+  text-align:center;
+  color: blue;
 }
 
 .stats{
-display:flex;
-gap:20px;
-justify-content:center;
-margin-bottom:30px;
+  display:flex;
+  gap:20px;
+  justify-content:center;
+  margin-bottom:30px;
 }
 
 .box{
-background:#1e293b;
-padding:15px 25px;
-border-radius:8px;
+  background:#1e293b;
+  padding:15px 25px;
+  border-radius:8px;
 }
 
 .filters{
-text-align:center;
-margin-bottom:20px;
+  text-align:center;
+  margin-bottom:20px;
 }
 
 button{
-padding:8px 15px;
-margin:5px;
-cursor:pointer;
+  padding:8px 15px;
+  margin:5px;
+  cursor:pointer;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
+  width:100%;
+  border-collapse:collapse;
 }
 
 th,td{
-padding:10px;
-border-bottom:1px solid #333;
-text-align:center;
+  padding:10px;
+  border-bottom:1px solid #333;
+  text-align:center;
 }
 
-.buy{
-color:#22c55e;
-}
-
-.sell{
-color:#ef4444;
-}
-
-.active{
-color:#22c55e;
-}
-
-.closed{
-color:#ef4444;
-}
-
+.buy{ color:#22c55e; }
+.sell{ color:#ef4444; }
+.active{ color:#22c55e; }
+.closed{ color:#ef4444; }
 </style>
 
 </head>
-
 <body>
 
 <h1>Trading Signals</h1>
 
 <div class="stats">
-
-<div class="box">Total Trades: <span id="total"></span></div>
-<div class="box">Win Rate: <span id="winrate"></span>%</div>
-<div class="box">Total Pips: <span id="pips"></span></div>
-
+  <div class="box">Total Trades: <span id="total"></span></div>
 </div>
 
 <div class="filters">
-
-<button onclick="filter='all'">All</button>
-<button onclick="filter='active'">Active</button>
-<button onclick="filter='closed'">Closed</button>
-
+  <button onclick="filter='all'">All</button>
+  <button onclick="filter='active'">Active</button>
+  <button onclick="filter='closed'">Closed</button>
 </div>
 
 <table>
-
 <thead>
-
 <tr>
-<th>ID</th>
-<th>Type</th>
-<th>Pair</th>
-<th>Entry Price</th>
-<th>Stop Loss</th>
-<th>Targets</th>
-<th>Status</th>
-<th>Date</th>
+  <th>ID</th>
+  <th>Type</th>
+  <th>Pair</th>
+  <th>Entry Price</th>
+  <th>Stop Loss</th>
+  <th>Targets</th>
+  <th>Status</th>
+  <th>Date</th>
 </tr>
-
 </thead>
-
 <tbody id="signals"></tbody>
-
 </table>
 
 <script>
-
 let filter="all"
 
 async function loadSignals(){
+  let r = await fetch("http://127.0.0.1:5000/signals")  // صححت الرابط
+  let data = await r.json()
 
-let r = await fetch("https://ictfx.pythonanywhere.com/signals")
-let data = await r.json()
+  let html=""
+  data.forEach(s=>{
+    if(filter=="active" && !s.active) return
+    if(filter=="closed" && s.active) return
 
-let html=""
+    html+=`
+    <tr>
+      <td>${s.id}</td>
+      <td class="${s.type.includes('⬆️')?'buy':'sell'}">${s.type}</td>
+      <td>${s.pair}</td>
+      <td>${s.entry}</td>
+      <td>${s.sl}</td>
+      <td>${s.targets.join(" ")}</td>
+      <td class="${s.active?'active':'closed'}">${s.active?'Active':'Closed'}</td>
+      <td>${s.time}</td>
+    </tr>`
+  })
 
-data.forEach(s=>{
-
-if(filter=="active" && !s.active) return
-if(filter=="closed" && s.active) return
-
-html+=`
-
-<tr>
-
-<td>${s.id}</td>
-<td class="${s.type.includes('⬆️')?'buy':'sell'}">${s.type}</td>
-<td>${s.pair}</td>
-<td>${s.entry}</td>
-<td>${s.sl}</td>
-<td>${s.targets.join(" ")}</td>
-<td class="${s.active?'active':'closed'}">${s.active?'Active':'Closed'}</td>
-<td>${s.time}</td>
-
-</tr>`
-
-
-})
-
-document.getElementById("signals").innerHTML=html
-
+  document.getElementById("signals").innerHTML=html
 }
 
 async function loadStats(){
+  let r = await fetch("http://127.0.0.1:5000/stats")
+  let s = await r.json()
 
-let r = await fetch("https://ictfx.pythonanywhere.com/stats")
-let s = await r.json()
-
-document.getElementById("total").innerText=s.total
-document.getElementById("winrate").innerText=s.winrate
-document.getElementById("pips").innerText=s.pips
-
+  document.getElementById("total").innerText=s.total
+  document.getElementById("winrate").innerText=s.winrate
+  document.getElementById("pips").innerText=s.pips
 }
 
 setInterval(()=>{
-loadSignals()
-loadStats()
+  loadSignals()
+  loadStats()
 },3000)
 
 loadSignals()
 loadStats()
-
 </script>
 
 </body>

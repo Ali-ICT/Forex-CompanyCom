@@ -16,14 +16,18 @@ window.addEventListener('resize', () => {
     }
 });
 
+const apiKey = "3a00424180694f64baaa23fda66c6a53"; // ضع مفتاح API الخاص بك هنا
+
+// الرموز المحددة يدوياً
 const symbolsList = [
-  {symbol:"XAUUSD", name:"XAUUSD"},
-  {symbol:"EURUSD", name:"EURUSD"},
-  {symbol:"GBPUSD", name:"GBPUSD"},
-  {symbol:"USDJPY", name:"USDJPY"},
-  {symbol:"USDCHF", name:"USDCHF"},
+  {symbol:"XAU/USD", name:"XAUUSD"},
+  {symbol:"EUR/USD", name:"EURUSD"},
+  {symbol:"GBP/USD", name:"GBPUSD"},
+  {symbol:"USD/JPY", name:"USDJPY"},
+  {symbol:"USD/CHF", name:"USDCHF"},
 ];
 
+// إنشاء الجدول
 function initTable(){
   const tbody = document.getElementById("marketTable");
   tbody.innerHTML = "";
@@ -35,42 +39,50 @@ function initTable(){
       <td class="price">-</td>
       <td class="change up">-</td>
       <td class="high">-</td>
-      <td class="low">-</td>`
-    ;
+      <td class="low">-</td>
+    `
     tbody.appendChild(tr);
   });
 }
 
+// تحديث الأسعار live مع قيمة وهمية للـ Change
 async function updateMarket(){
-  try{
-    const res = await fetch("http://127.0.0.1:5002/prices");
-    const data = await res.json();
-    
-    symbolsList.forEach(s=>{
-      const row = document.querySelector(`tr[data-code="${s.symbol}"]`);
-      if(!row) return;
+  for(let s of symbolsList){
+    try{
+      const res = await fetch(`https://api.twelvedata.com/quote?symbol=${s.symbol}&apikey=${apiKey}`);
+      const data = await res.json();
+      if(data.status === "error") continue;
 
+      const row = document.querySelector(`tr[data-code="${s.symbol}"]`);
       const priceCell = row.querySelector(".price");
       const changeCell = row.querySelector(".change");
       const highCell = row.querySelector(".high");
       const lowCell = row.querySelector(".low");
 
-      const info = data[s.symbol];
-      priceCell.textContent = info.price.toFixed(5);
+      const price = parseFloat(data.close);
+      priceCell.textContent = price.toFixed(2);
 
-      const arrowChange = info.change >=0 ? "▲" : "▼";
-      changeCell.textContent =`${arrowChange} ${info.change.toFixed(5)}`;
-      changeCell.className = "change " + (info.change>=0?"up":"down");
+      // Change وهمي: ±2% تقريبا
+      const fakeChangePercent = ((Math.random()*4)-2).toFixed(2);
+      const arrowChange = fakeChangePercent >= 0 ? "▲" : "▼";
+      changeCell.textContent = `${arrowChange} ${fakeChangePercent}%`;
+      changeCell.className = "change " + (fakeChangePercent >= 0 ? "up" : "down");
 
-      highCell.innerHTML = `${info.high.toFixed(5)} <span class="up">▲</span>`;
-      lowCell.innerHTML = `${info.low.toFixed(5)} <span class="down">▼</span>`;
-    });
+      // High / Low مع سهم
+      const high = parseFloat(data.high);
+      const low = parseFloat(data.low);
 
-  }catch(err){
-    console.error(err);
+      const highArrow = "▲";
+      const lowArrow = "▼";
+
+      highCell.innerHTML = `${high.toFixed(2)} <span class="up">${highArrow}</span>`;
+      lowCell.innerHTML = `${low.toFixed(2)} <span class="down">${lowArrow}</span>`;
+
+    } catch(err){
+      console.error(Error `fetching ${s.symbol}: ${err.message}`);
+    }
   }
 }
-
 // البداية
 initTable();
 setInterval(updateMarket,1000);
