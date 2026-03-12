@@ -65,7 +65,7 @@ let filter="all";
 
 async function loadSignals(){
   try {
-    let r = await fetch("https://ictfx.pythonanywhere.com/signals");
+    let r = await fetch("https://ICTFX.pythonanywhere.com/signals");
     let data = await r.json();
 
     let html="";
@@ -94,7 +94,7 @@ async function loadSignals(){
 
 async function loadStats(){
   try {
-    let r = await fetch("https://ictfx.pythonanywhere.com/stats");
+    let r = await fetch("https://ICTFX.pythonanywhere.com/stats");
     let s = await r.json();
 
     document.getElementById("total").innerText = s.total;
