@@ -92,6 +92,12 @@ nav ul a:hover { color: blue; }
 /* Media Queries */
 
 /* Screens 770px and below */
+@media (min-width: 770px) and (max-width: 993px) {
+    header .container nav ul li {
+        font-size: 10px;
+    }
+}
+
 @media (max-width: 770px) {
     #menu-toggle { display: flex; }
     nav ul {
